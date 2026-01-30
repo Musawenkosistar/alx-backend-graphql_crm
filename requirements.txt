@@ -1,0 +1,9 @@
+Django>=3.2,<5.0
+graphene-django>=3.0
+django-filter>=22.1
+
+# MySQL
+mysqlclient>=2.1
+
+# PostgreSQL
+psycopg2-binary>=2.9
