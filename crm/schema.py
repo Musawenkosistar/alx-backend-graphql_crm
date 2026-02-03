@@ -7,6 +7,7 @@ from datetime import datetime
 
 from graphene_django.filter import DjangoFilterConnectionField
 from .filters import CustomerFilter, ProductFilter, OrderFilter
+from crm.models import Product
 
 # ----------------------
 # GraphQL Types
