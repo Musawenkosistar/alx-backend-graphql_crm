@@ -123,6 +123,34 @@ class CreateOrder(graphene.Mutation):
         order.products.set(products)
         return CreateOrder(order=order)
 
+class ProductType(DjangoObjectType):
+    class Meta:
+        model = Product
+
+class UpdateLowStockProducts(graphene.Mutation):
+    class Arguments:
+        # No arguments needed for this mutation
+        pass
+
+    updated_products = graphene.List(ProductType)
+    message = graphene.String()
+
+    def mutate(self, info):
+        updated_products = []
+        low_stock_products = Product.objects.filter(stock__lt=10)
+
+        for product in low_stock_products:
+            product.stock += 10  # Restocking
+            product.save()
+            updated_products.append(product)
+
+        return UpdateLowStockProducts(
+            updated_products=updated_products,
+            message=f"{len(updated_products)} products restocked successfully!"
+        )
+
+class Mutation(graphene.ObjectType):
+    update_low_stock_products = UpdateLowStockProducts.Field()
 
 # ----------------------
 # Root Query
