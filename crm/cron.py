@@ -13,12 +13,16 @@ def log_crm_heartbeat():
     
     # Optional: query GraphQL hello field
     try:
-        transport = RequestsHTTPTransport(url="http://localhost:8000/graphql", verify=True)
-        client = Client(transport=transport, fetch_schema_from_transport=True)
-        query = gql("{ hello }")
-        response = client.execute(query)
-        with open(LOG_FILE, "a") as f:
-            f.write(f"{timestamp} GraphQL hello response: {response}\n")
-    except Exception as e:
-        with open(LOG_FILE, "a") as f:
-            f.write(f"{timestamp} GraphQL check failed: {e}\n")
+        transport = RequestsHTTPTransport(url='http://localhost:8000/graphql', verify=True)
+        client = Client(transport=transport, fetch_schema_from_transport=False)
+
+query = gql("""
+{
+  hello
+}
+""")
+
+try:
+    result = client.execute(query)
+except Exception as e:
+    print(f"GraphQL endpoint not responding: {e}")
